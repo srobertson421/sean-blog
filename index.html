@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpine JS Test</title>
+  <link rel="stylesheet" href="/min.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main
+    x-data="{
+      currentPage: window.location.pathname,
+      navigate(path) {
+        this.currentPage = path;
+        window.history.pushState({}, '', path);
+      },
+      postEls: document.querySelectorAll('.post-template')
+    }"
+
+    x-init="
+      window.onpopstate = function browserNav() {
+        currentPage = window.location.pathname;
+      }
+
+      document.body.addEventListener('click', e => {
+        if(e.target.tagName.toLowerCase() === 'a') {
+          e.preventDefault();
+          navigate(e.target.getAttribute('href'));
+        }
+
+        if(e.target.parentNode.tagName.toLowerCase() === 'a') {
+          e.preventDefault();
+          navigate(e.target.parentNode.getAttribute('href'));
+        }
+      });
+    "
+  >
+    <nav class="nav" tabindex="-1">
+      <div class="container">
+          <a href="/" class="pagename">Home</a>
+          <a href="/posts">Posts</a>
+          <a href="/about">About</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <template id="home-page" x-if="currentPage === '/'">
+        <h1>Home</h1>
+      </template>
+  
+      <!-- Use multiple templates if using lists -->
+      <template x-if="currentPage === '/posts'">
+        <h1>Posts</h1>
+      </template>
+      <template
+        id="posts-page"
+        x-if="currentPage === '/posts'"
+        x-for="postEl in postEls"
+        :key="postEl.id"
+      >
+        <div class="row">
+          <div class="col c12">
+            <a :href="postEl.getAttribute('path')"><h4 x-text="postEl.content.querySelector('h1').innerText"></h4></a>
+            <p x-text="postEl.content.querySelector('p').innerText.substring(0, 500) + '...'"></p>
+          </div>
+        </div>
+      </template>
+  
+      <template id="about-page" x-if="currentPage === '/about'">
+        <h1>About</h1>
+      </template>
+  
+      <!-- #posts -->
+      <template class="post-template" path="/post/another-post-and-stuff" id="another-post-and-stuff" x-if="currentPage === '/post/another-post-and-stuff'">
+        <div class="container">
+          <h1>Another Post and Stuff</h1>
+          
+<p>Here we go and things are happening again so watch out for crap and things</p>
+
+        </div>
+      </template>
+    
+      <template class="post-template" path="/post/new-post-by-sean" id="new-post-by-sean" x-if="currentPage === '/post/new-post-by-sean'">
+        <div class="container">
+          <h1>New Post By Sean</h1>
+          
+<figure class="wp-block-image size-large"><img data-attachment-id="28" data-permalink="https://seanwp423897997.wordpress.com/placeholder-image/" data-orig-file="https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg" data-orig-size="1600,1066" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Placeholder Image" data-image-description="" data-medium-file="https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=300" data-large-file="https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=1024" src="https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=750" alt="" class="wp-image-28" srcset="https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=750 750w, https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=1500 1500w, https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=150 150w, https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=300 300w, https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=768 768w, https://seanwp423897997.files.wordpress.com/2020/11/qi-bin-w4hbafegiac-unsplash.jpg?w=1024 1024w" sizes="(max-width: 750px) 100vw, 750px" /></figure>
+
+
+
+<p>This is a test post and as such won&#8217;t contain anything of value to anyone. I would imagine the previously stated rule will apply to most of the posts written here.</p>
+
+        </div>
+      </template>
+    <!-- #posts -->
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>

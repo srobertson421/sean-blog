@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpine JS Test</title>
+  <link rel="stylesheet" href="/min.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main
+    x-data="{
+      currentPage: window.location.pathname,
+      navigate(path) {
+        this.currentPage = path;
+        window.history.pushState({}, '', path);
+      },
+      postEls: document.querySelectorAll('.post-template')
+    }"
+
+    x-init="
+      window.onpopstate = function browserNav() {
+        currentPage = window.location.pathname;
+      }
+
+      document.body.addEventListener('click', e => {
+        if(e.target.tagName.toLowerCase() === 'a') {
+          e.preventDefault();
+          navigate(e.target.getAttribute('href'));
+        }
+
+        if(e.target.parentNode.tagName.toLowerCase() === 'a') {
+          e.preventDefault();
+          navigate(e.target.parentNode.getAttribute('href'));
+        }
+      });
+    "
+  >
+    <nav class="nav" tabindex="-1">
+      <div class="container">
+          <a href="/" class="pagename">Home</a>
+          <a href="/posts">Posts</a>
+          <a href="/about">About</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <template id="home-page" x-if="currentPage === '/'">
+        <h1>Home</h1>
+      </template>
+  
+      <!-- Use multiple templates if using lists -->
+      <template x-if="currentPage === '/posts'">
+        <h1>Posts</h1>
+      </template>
+      <template
+        id="posts-page"
+        x-if="currentPage === '/posts'"
+        x-for="postEl in postEls"
+        :key="postEl.id"
+      >
+        <div class="row">
+          <div class="col c12">
+            <a :href="postEl.getAttribute('path')"><h4 x-text="postEl.content.querySelector('h1').innerText"></h4></a>
+            <p x-text="postEl.content.querySelector('p').innerText.substring(0, 500) + '...'"></p>
+          </div>
+        </div>
+      </template>
+  
+      <template id="about-page" x-if="currentPage === '/about'">
+        <h1>About</h1>
+      </template>
+  
+      <!-- #posts -->
+      <!-- #posts -->
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
