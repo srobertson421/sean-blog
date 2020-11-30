@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alpine JS Test</title>
+  <title>Sean Goes Coding</title>
   <link rel="stylesheet" href="/min.css" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
@@ -38,45 +38,72 @@
   >
     <nav class="nav" tabindex="-1">
       <div class="container">
-          <a href="/" class="pagename">Home</a>
+          <a href="/" class="pagename">Sean Goes Coding</a>
           <a href="/posts">Posts</a>
           <a href="/about">About</a>
       </div>
     </nav>
 
-    <div class="container">
-      <template id="home-page" x-if="currentPage === '/'">
-        <h1>Home</h1>
-      </template>
-  
-      <!-- Use multiple templates if using lists -->
-      <template x-if="currentPage === '/posts'">
+    <template id="home-page" x-if="currentPage === '/'">
+      <h1>Home</h1>
+    </template>
+
+    <!-- Use multiple templates if using lists -->
+    <template id="posts-page" x-if="currentPage === '/posts'">
+      <div class="container">
         <h1>Posts</h1>
-      </template>
-      <template
-        id="posts-page"
-        x-if="currentPage === '/posts'"
-        x-for="postEl in postEls"
-        :key="postEl.id"
-      >
-        <div class="row">
-          <div class="col c12">
-            <a :href="postEl.getAttribute('path')"><h4 x-text="postEl.content.querySelector('h1').innerText"></h4></a>
-            <p x-text="postEl.content.querySelector('p').innerText.substring(0, 500) + '...'"></p>
+        <template
+          x-for="postEl in postEls"
+          :key="postEl.id"
+        >
+          <div class="row">
+            <div class="col c12">
+              <a :href="postEl.getAttribute('path')"><h4 x-text="postEl.content.querySelector('h1').innerText"></h4></a>
+              <p x-text="postEl.content.querySelector('p').innerText.substring(0, 500) + '...'"></p>
+            </div>
           </div>
+        </template>
+      </div>
+    </template>
+
+    <template id="about-page" x-if="currentPage === '/about'">
+      <div class="container">
+        <h1>About</h1>
+        <p>
+          This blog is about me, Sean Robertson, as I wander the paths and byways of
+          software development. I won't be pretending to be the smartest, most expertist guy
+          on the block, I'm just a dude wanting to make stuff. If I can teach something to 
+          someone along the way that's cool. Learning new things myself is cool too.
+        </p>
+        <p>
+          You won't find any tracking, analytics, or ad libraries being pulled in here. I try to 
+          keep things as light as possible and really despise content that is obscured by 3rd-party
+          nonsense.
+        </p>
+        <p>
+          Also, this site is a custom static-generated site that I am quite proud of. You can find 
+          the source code for it
+          <a href="https://github.com/srobertson421/sean-blog">here</a>
+        </p>
+        <p>I hope you enjoy the content and please reach out if you have questions or wanna chat!</p>
+      </div>
+    </template>
+
+    <!-- #posts -->
+      <template class="post-template" path="/post/test-the-builder" id="test-the-builder" x-if="currentPage === '/post/test-the-builder'">
+        <div class="container">
+          <h1>Test the Builder Edit!</h1>
+          
+<p>Hopefully this auto deploys via netlify. That would be freaking dope! This is an edit!</p>
+
         </div>
       </template>
-  
-      <template id="about-page" x-if="currentPage === '/about'">
-        <h1>About</h1>
-      </template>
-  
-      <!-- #posts -->
-      <template class="post-template" path="/post/another-post-and-stuff" id="another-post-and-stuff" x-if="currentPage === '/post/another-post-and-stuff'">
+    
+      <template class="post-template" path="/post/live-post-test" id="live-post-test" x-if="currentPage === '/post/live-post-test'">
         <div class="container">
-          <h1>Another Post and Stuff</h1>
+          <h1>Live Post Test</h1>
           
-<p>Here we go and things are happening again so watch out for crap and things</p>
+<p>Hopefully this works and I haven&#8217;t screwed something up. Usually I screw something up.</p>
 
         </div>
       </template>
@@ -94,7 +121,6 @@
         </div>
       </template>
     <!-- #posts -->
-    </div>
   </main>
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
   <script src="/app.js" defer></script>
